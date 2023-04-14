@@ -3,7 +3,7 @@ package cxcompressbrotli
 import (
 	"io"
 
-	"github.com/klauspost/compress/br"
+	"github.com/andybalholm/brotli"
 	"github.com/valyala/bytebufferpool"
 )
 
@@ -12,7 +12,7 @@ func Compress(input []byte) ([]byte, error) {
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
 
-	w := br.NewWriter(buf)
+	w := brotli.NewWriter(buf)
 	if _, err := w.Write(input); err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func Decompress(input []byte) ([]byte, error) {
 	buf := bytebufferpool.Get()
 	defer bytebufferpool.Put(buf)
 
-	r := br.NewReader(bytes.NewReader(input))
+	r := brotli.NewReader(bytes.NewReader(input))
 	if _, err := io.Copy(buf, r); err != nil {
 		return nil, err
 	}
