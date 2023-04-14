@@ -2,7 +2,8 @@ package cxcompressgzip
 
 import (
 	"io"
-
+	"bytes"
+	
 	"github.com/klauspost/compress/gzip"
 	"github.com/valyala/bytebufferpool"
 )
