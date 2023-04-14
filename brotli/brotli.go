@@ -2,7 +2,8 @@ package cxcompressbrotli
 
 import (
 	"io"
-
+	"bytes"
+	
 	"github.com/andybalholm/brotli"
 	"github.com/valyala/bytebufferpool"
 )
