@@ -1,0 +1,2 @@
+# gocompress
+Go Compress
