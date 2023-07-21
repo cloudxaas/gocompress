@@ -11,26 +11,39 @@ import (
 // Compress compresses the input byte slice using Brotli compression.
 func Compress(input []byte) ([]byte, error) {
 	buf := bytebufferpool.Get()
-	defer bytebufferpool.Put(buf)
+	
 
 	w := brotli.NewWriter(buf)
 	if _, err := w.Write(input); err != nil {
+		bytebufferpool.Put(buf)
 		return nil, err
 	}
 	if err := w.Close(); err != nil {
+		bytebufferpool.Put(buf)
 		return nil, err
 	}
-	return buf.Bytes(), nil
+
+	// Copy the data to a new slice before returning
+	output := make([]byte, buf.Len())
+	copy(output, buf.B)
+	bytebufferpool.Put(buf)
+	return output, nil
 }
 
 // Decompress decompresses the input byte slice using Brotli decompression.
 func Decompress(input []byte) ([]byte, error) {
 	buf := bytebufferpool.Get()
-	defer bytebufferpool.Put(buf)
+	
 
 	r := brotli.NewReader(bytes.NewReader(input))
 	if _, err := io.Copy(buf, r); err != nil {
+		bytebufferpool.Put(buf)
 		return nil, err
 	}
-	return buf.Bytes(), nil
+
+	// Copy the data to a new slice before returning
+	output := make([]byte, buf.Len())
+	copy(output, buf.B)
+	bytebufferpool.Put(buf)
+	return output, nil
 }
